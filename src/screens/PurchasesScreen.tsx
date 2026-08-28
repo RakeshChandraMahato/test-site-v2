@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { formatINR, formatDate } from '@/lib/utils';
-import { ShoppingBag, Plus, ShieldAlert, Search } from 'lucide-react';
+import { ShoppingBag, Plus, ShieldAlert, Download, Search } from 'lucide-react';
+import { generatePurchasesTallyXML, downloadFile } from '@/services/tallyExportService';
 import { compressAndUploadImage } from '@/services/imageService';
 
 export const PurchasesScreen: React.FC = () => {
@@ -142,6 +143,12 @@ export const PurchasesScreen: React.FC = () => {
     return target.includes(q);
   });
 
+  const handleExportTally = () => {
+    if (filteredPurchases.length === 0) return alert('No purchases to export.');
+    const xml = generatePurchasesTallyXML(filteredPurchases, suppliers);
+    downloadFile(xml, `asj_purchases_tally_${new Date().toISOString().slice(0, 10)}.xml`, 'application/xml');
+  };
+
   return (
     <div className="max-w-5xl space-y-8">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
@@ -151,12 +158,16 @@ export const PurchasesScreen: React.FC = () => {
             Inward inventory entry with automated Landed Cost math and rate propagation.
           </p>
         </div>
-        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-          <DialogTrigger asChild>
-            <Button size="sm">
-              <Plus className="h-3.5 w-3.5 mr-1.5" /> Inward Purchase Entry
-            </Button>
-          </DialogTrigger>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" onClick={handleExportTally} title="Download Tally Purchases XML">
+            <Download className="h-3.5 w-3.5 mr-1.5" /> Export Tally XML
+          </Button>
+          <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+            <DialogTrigger asChild>
+              <Button size="sm">
+                <Plus className="h-3.5 w-3.5 mr-1.5" /> Inward Purchase Entry
+              </Button>
+            </DialogTrigger>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Inward Stock Purchase Entry</DialogTitle>
@@ -433,6 +444,7 @@ export const PurchasesScreen: React.FC = () => {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       {/* History Register */}

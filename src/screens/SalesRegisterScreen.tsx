@@ -4,7 +4,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { formatINR, formatDate, formatQty } from '@/lib/utils';
-import { ChevronDown, ChevronRight, Search, Printer, X } from 'lucide-react';
+import { ChevronDown, ChevronRight, Search, Printer, X, Download } from 'lucide-react';
+import { generateSalesTallyXML, downloadFile } from '@/services/tallyExportService';
 
 export const SalesRegisterScreen: React.FC<{
   onOpenPacking: (orderId: string) => void;
@@ -26,6 +27,12 @@ export const SalesRegisterScreen: React.FC<{
     return searchTarget.includes(search.toLowerCase());
   });
 
+  const handleExportTally = () => {
+    if (filtered.length === 0) return alert('No orders to export.');
+    const xml = generateSalesTallyXML(filtered, customers);
+    downloadFile(xml, `asj_sales_tally_${new Date().toISOString().slice(0, 10)}.xml`, 'application/xml');
+  };
+
   return (
     <div className="space-y-8 max-w-4xl">
       <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
@@ -33,9 +40,14 @@ export const SalesRegisterScreen: React.FC<{
           <h1 className="font-serif text-3xl font-bold">Sales register</h1>
           <p className="text-sm text-muted-foreground mt-2">Searchable orders with rate snapshots and cancellation audit.</p>
         </div>
-        <div className="relative w-full sm:w-56">
-          <Search className="absolute left-0 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
-          <Input placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-5" />
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Button variant="outline" size="sm" onClick={handleExportTally} title="Download Tally Vouchers XML">
+            <Download className="h-3.5 w-3.5 mr-1.5" /> Export Tally XML
+          </Button>
+          <div className="relative w-full sm:w-56">
+            <Search className="absolute left-0 top-2.5 h-3.5 w-3.5 text-muted-foreground" />
+            <Input placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-5" />
+          </div>
         </div>
       </div>
 
