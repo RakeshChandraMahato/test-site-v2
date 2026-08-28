@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 36 33% 96%;
+    --foreground: 20 6% 10%;
+    --card: 36 33% 96%;
+    --card-foreground: 20 6% 10%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 6% 10%;
+    --primary: 20 6% 10%;
+    --primary-foreground: 36 33% 96%;
+    --secondary: 30 15% 90%;
+    --secondary-foreground: 20 6% 10%;
+    --muted: 30 10% 92%;
+    --muted-foreground: 20 3% 46%;
+    --accent: 30 15% 90%;
+    --accent-foreground: 20 6% 10%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 20 6% 82%;
+    --input: 20 6% 82%;
+    --ring: 20 6% 10%;
+    --radius: 0px;
+  }
+}
+
+* {
+  border-color: hsl(var(--border));
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: hsl(36, 33%, 96%);
+  color: hsl(20, 6%, 10%);
+  -webkit-tap-highlight-color: transparent;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+/* Eliminate mobile 300ms double-tap delay */
+button, input, select, textarea, a, label {
+  touch-action: manipulation;
+}
+
+.touch-scroll {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.font-serif {
+  font-family: 'Source Serif 4', Georgia, serif;
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+}
+
+::selection {
+  background: hsl(20, 6%, 10%);
+  color: hsl(36, 33%, 96%);
+}
+
+/* GPU Accelerated Primitives */
+.gpu-layer {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform, opacity;
+}
+
+/* Hardware-accelerated transitions & keyframes */
+@keyframes viewFadeIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 6px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes scaleInSubtle {
+  from {
+    opacity: 0;
+    transform: scale3d(0.97, 0.97, 1);
+  }
+  to {
+    opacity: 1;
+    transform: scale3d(1, 1, 1);
+  }
+}
+
+.animate-view-fade {
+  animation: viewFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.animate-scale-in {
+  animation: scaleInSubtle 0.18s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+/* GPU-accelerated hover & active tap response without JS */
+.gpu-tap {
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.gpu-tap:active {
+  transform: scale3d(0.97, 0.97, 1);
+}
+
+.gpu-card-hover {
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+}
+
+.gpu-card-hover:hover {
+  transform: translate3d(0, -2px, 0);
+}
